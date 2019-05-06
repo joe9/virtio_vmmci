@@ -223,6 +223,7 @@ static void monitor_work_func(struct work_struct *work)
 
 	debug("current clock drift: " TIME_FMT " seconds\n", diff.tv_sec, diff.tv_nsec);
 
+	sync_work_func(work);
 	queue_delayed_work(vmmci->monitor_wq, &vmmci->monitor_work, DELAY_20s);
 	debug("drift measurement routine finished\n");
 }
@@ -311,7 +312,8 @@ static void vmmci_changed(struct virtio_device *vdev)
 
 	case VMMCI_SYNCRTC:
 		log("clock sync requested by host\n");
-		schedule_work(&vmmci->sync_work);
+		/* this is done automatically, so why bother with this scheduling */
+		/* schedule_work(&vmmci->sync_work); */
 		break;
 
 	default:
